@@ -1,0 +1,32 @@
+/*
+ * package com.Repo.JPA_DB.Config;
+ * 
+ * import java.util.Collection;
+ * 
+ * import org.ehcache.config.CacheConfiguration; import
+ * org.ehcache.config.builders.CacheConfigurationBuilder; import
+ * org.springframework.beans.factory.annotation.Configurable; import
+ * org.springframework.cache.Cache; import
+ * org.springframework.cache.CacheManager; import
+ * org.springframework.cache.annotation.CachingConfigurerSupport; import
+ * org.springframework.cache.annotation.EnableCaching; import
+ * org.springframework.cache.ehcache.EhCacheCacheManager; import
+ * org.springframework.context.annotation.Bean; import
+ * org.springframework.context.annotation.Configuration;
+ * 
+ * 
+ * 
+ * public class APIFilter extends CachingConfigurerSupport{
+ * 
+ * @Bean public APIFilter cacheFilter() { return new APIFilter(); }
+ * 
+ * 
+ * 
+ * @Bean public CacheConfigurationBuilder<String, String> ehCache(){
+ * CacheConfigurationBuilder<String, String> config =
+ * CacheConfigurationBuilder<String, String>();
+ * 
+ * return null;
+ * 
+ * } }
+ */
