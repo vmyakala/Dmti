@@ -1,0 +1,38 @@
+#spring.h2.console.enabled=true
+#spring.datasource.platform=h2
+#spring.datasource.url=jdbc:h2:mem:vinay
+
+#==== connect to mysql ======#
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://10.100.12.99:3355/tng_address?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+spring.datasource.username=mlc_app
+spring.datasource.password=mlc2018
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
+#Variables#
+suggestionMatchCount=10
+
+#credentials of get token#
+tokenUrl=https://dc1.spatialstream.com/ssapi/rest/v1/recognition/oauth2/token
+clientId=etEAV0AYug6PXGwrvkAdny6SMbQoeYdV
+clientSecret=l06dHlLfc3DQzbnj0nE1QmT9AzHIz4Ky
+grantType=client_credentials
+accept=application/json
+
+#credentials of get address suggestions#
+
+addressSuggestionsUrl=https://lhrecognition.dmtispatial.com/services/rest/V2.2/suggest
+includePostalCode=true
+returnAliases=true
+suggestionsLimit=50
+
+
+#credentials of get complete data from dmti (recognize free form)#
+recognizeFreeFormUrl=https://lhrecognition.dmtispatial.com/services/rest/V2.2/recognizefreeform
+Access-Control-Allow-Origin=*
+InferSubAddresses=true
+scoreThreshold=0
+dmtiAddressDetailsLimit=50
+
+
+spring.cache.jcache.config=classpath:src\main\resources\ehcache.xml
