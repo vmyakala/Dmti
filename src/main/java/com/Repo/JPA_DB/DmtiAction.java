@@ -4,24 +4,26 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.PropertySource;
+
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,16 +37,12 @@ import com.Repo.JPA_DB.DMTI_Model.SuggestionResponses;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import aj.org.objectweb.asm.TypeReference;
 
-@Component
+@Service
 public class DmtiAction {
 	
-	
-	Date dateobj = new Date();
-	java.sql.Timestamp time = new java.sql.Timestamp(System.currentTimeMillis());
-	
-	
+	@Autowired
+	TokenAction tokenAction;
 	@Autowired
 	DmtiRepo repo;
 	SuggestionResponses suggestionsList = new SuggestionResponses();
@@ -71,6 +69,8 @@ public class DmtiAction {
 	
 	//Checks the Uaid in local DB and if data is already present it updates or if no data than it inserts 
 	public void populateAddressAction(final LocationCandidate locCan) throws Exception  {
+		 Date dateobj = new Date();
+		java.sql.Timestamp time = new java.sql.Timestamp(System.currentTimeMillis());
 		TngPropertyAddressPK tngpk = new TngPropertyAddressPK() ;
 		TngPropertyAddress tng = new TngPropertyAddress() ;
 			try {
@@ -176,25 +176,12 @@ public class DmtiAction {
 		return data;
 	}
 	
-	//@CacheEvict(value="eightHour", key="dmtiCache", condition = "#isCacheble == null && #!isCacheble", beforeInvocation = true)
-	@Cacheable(value="eightHour", key="dmtiCache", condition = "#isCacheble != null && #isCacheble")
-	public ResponseEntity<DmtiToken> getToken(boolean isCacheble) throws JSONException, JsonMappingException, JsonProcessingException{
-		
-		String url = env.getProperty("tokenUrl");
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		builder.queryParam("client_id", env.getProperty("clientId"));
-		builder.queryParam("client_secret", env.getProperty("clientSecret"));
-		builder.queryParam("grant_type", env.getProperty("grantType"));
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<DmtiToken> response= restTemplate.postForEntity(builder.toUriString(), entity, DmtiToken.class);
-
-		return response;
-	}
+	
 	
 	private static ResponseEntity<DmtiToken> token_response;
+	
+	
+
 	public List<String> getAddressMatch(String searchAddress) throws JsonMappingException, JsonProcessingException, JSONException {
 		
 		List<SuggestionResponse> matchingAddresses = new ArrayList<SuggestionResponse>();
@@ -204,7 +191,8 @@ public class DmtiAction {
 		 * token_response.getBody().getExpiryTime().before(new Date()) ) {
 		 * token_response = getToken(); }
 		 */
-		token_response = getToken(true);
+		token_response = tokenAction.getToken(8);
+		
 		matchingAddresses.addAll(Arrays.asList(getAddressMatchAction(searchAddress)));
 		
 		for (SuggestionResponse suggestionResponse : matchingAddresses) {
@@ -261,7 +249,7 @@ public class DmtiAction {
 			 * token_response.getBody().getExpiryTime().before(new Date()) ) {
 			 * token_response = getToken(); }
 			 */
-				token_response = getToken(true);
+				token_response = tokenAction.getToken(8);
 				String url = env.getProperty("recognizeFreeFormUrl");
 				HttpHeaders headers = new HttpHeaders();
 				headers.set("Authorization", token_response.getBody().getToken_type()+" "+token_response.getBody().getAccess_token());
@@ -291,6 +279,9 @@ public class DmtiAction {
 		return data;
 		
 	}
+	
+	
+	
 	
 	
 	

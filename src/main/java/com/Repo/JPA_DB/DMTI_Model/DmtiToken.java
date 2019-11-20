@@ -7,7 +7,7 @@ public class DmtiToken {
 	
 	private String token_type;
 	private String access_token;
-	private String expires_in;
+	private Long expires_in;
 	private Date expiryTime;
 	
 	public Date getExpiryTime() {
@@ -29,13 +29,15 @@ public class DmtiToken {
 		return access_token;
 	}
 	public void setAccess_token(String access_token) {
+		//System.out.println("on startup call "+access_token);
 		this.access_token = access_token;
 	}
-	public String getExpires_in() {
+	public Long getExpires_in() {
 		return expires_in;
 	}
-	public void setExpires_in(String expires_in) {
+	public void setExpires_in(Long expires_in) {
+		//System.out.println("on startup call "+expires_in);
 		this.expires_in = expires_in;
-		setExpiryTime(new Date(), Integer.parseInt(expires_in));
+		setExpiryTime(new Date(), expires_in.intValue());
 	}
 }
